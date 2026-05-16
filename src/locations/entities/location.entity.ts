@@ -1,4 +1,4 @@
-import { IsUUID } from 'class-validator';
+import { IsOptional, IsUUID } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('locations')
@@ -11,12 +11,15 @@ export class Location {
     locationName: string;
 
     @Column()
-    locationAddress: string;
-
-    @Column({ unique: true })
-    locationCity: string;
+    startingLocation: string;
 
     @Column()
-    locationState: string;
+    finalLocation: string;
 
+    @Column()
+    IdTruck: string;
+
+    @Column()
+    @IsOptional()
+    imageUrl?: string;
 }

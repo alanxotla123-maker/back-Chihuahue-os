@@ -13,4 +13,8 @@ export class CreateLocationDto {
 
   @IsString()
   city: string;
+
+  @IsString()
+  @IsOptional()
+  imageUrl?: string;
 }
