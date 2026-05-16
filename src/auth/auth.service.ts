@@ -1,26 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/auth.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
+
   create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+    const user = this.userRepository.create(createAuthDto);
+    return this.userRepository.save(user);
+  }
+
+  async login(loginDto: import('./dto/login.dto').LoginDto) {
+    const user = await this.userRepository.findOne({ where: { email: loginDto.email } });
+    if (!user) throw new NotFoundException(`Credenciales inválidas`);
+    if (user.password !== loginDto.password) throw new NotFoundException(`Credenciales inválidas`);
+    
+    return {
+      message: 'Inicio de sesión exitoso',
+      user: {
+        userId: user.userId,
+        email: user.email,
+        username: user.username,
+        role: user.role
+      }
+    };
   }
 
   findAll() {
-    return `This action returns all auth`;
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  async findOne(id: string) {
+    const user = await this.userRepository.findOne({ where: { userId: id } });
+    if (!user) throw new NotFoundException(`User with ID ${id} not found`);
+    return user;
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
+  async update(id: string, updateAuthDto: UpdateAuthDto) {
+    const user = await this.userRepository.preload({
+      userId: id,
+      ...updateAuthDto,
+    });
+    if (!user) throw new NotFoundException(`User with ID ${id} not found`);
+    return this.userRepository.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async remove(id: string) {
+    const user = await this.findOne(id);
+    return this.userRepository.remove(user);
   }
 }
