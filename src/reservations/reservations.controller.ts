@@ -26,4 +26,10 @@ export class ReservationsController {
     }
     return this.reservationsService.getOccupiedSeats(scheduleId, date);
   }
+
+  // GET /reservations/user/:passengerName
+  @Get('user/:passengerName')
+  async getByUser(@Param('passengerName') passengerName: string) {
+    return this.reservationsService.findByUser(passengerName);
+  }
 }

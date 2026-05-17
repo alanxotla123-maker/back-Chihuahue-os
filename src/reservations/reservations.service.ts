@@ -39,4 +39,13 @@ export class ReservationsService {
 
     return reservations.map(r => r.seatNumber);
   }
+
+  // Get all reservations for a specific user
+  async findByUser(passengerName: string) {
+    return this.reservationRepo.find({
+      where: { passengerName },
+      relations: ['schedule', 'schedule.location'],
+      order: { tripDate: 'DESC' }
+    });
+  }
 }
