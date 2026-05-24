@@ -6,13 +6,13 @@ export class CreateLocationDto {
   locationId?: string;
 
   @IsString()
-  name: string;
+  name!: string;
 
   @IsString()
-  address: string;
+  address!: string;
 
   @IsString()
-  city: string;
+  city!: string;
 
   @IsString()
   @IsOptional()

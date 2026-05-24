@@ -2,7 +2,8 @@ import { IsString, IsEmail, MinLength, IsOptional, IsUUID } from 'class-validato
 
 export class CreateAuthDto {
   @IsUUID()
-  userId: string;
+  @IsOptional()
+  userId?: string;
 
   @IsString()
   username: string;

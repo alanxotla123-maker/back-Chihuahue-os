@@ -15,6 +15,26 @@ export class ReservationsController {
     }
   }
 
+  // POST /reservations/lock
+  @Post('lock')
+  async lockSeat(@Body() dto: CreateReservationDto) {
+    try {
+      return await this.reservationsService.lockSeat(dto);
+    } catch (error: any) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  // POST /reservations/unlock
+  @Post('unlock')
+  async unlockSeat(@Body() dto: CreateReservationDto) {
+    try {
+      return await this.reservationsService.unlockSeat(dto);
+    } catch (error: any) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
   // GET /reservations/occupied?scheduleId=XXX&date=YYYY-MM-DD
   @Get('occupied')
   getOccupiedSeats(

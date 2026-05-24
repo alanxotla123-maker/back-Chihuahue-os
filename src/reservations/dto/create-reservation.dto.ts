@@ -3,17 +3,17 @@ import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
 export class CreateReservationDto {
   @IsString()
   @IsNotEmpty()
-  scheduleId: string;
+  scheduleId!: string;
 
   @IsString()
   @IsNotEmpty()
-  tripDate: string; // "YYYY-MM-DD"
+  tripDate!: string; // "YYYY-MM-DD"
 
   @IsNumber()
   @IsNotEmpty()
-  seatNumber: number;
+  seatNumber!: number;
 
   @IsString()
   @IsNotEmpty()
-  passengerName: string;
+  passengerName!: string;
 }

@@ -7,6 +7,7 @@ import { LocationsModule } from './locations/locations.module';
 import { SchedulesModule } from './schedules/schedules.module';
 import { TrucksModule } from './trucks/trucks.module';
 import { ReservationsModule } from './reservations/reservations.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ReservationsModule } from './reservations/reservations.module';
     SchedulesModule,
     TrucksModule,
     ReservationsModule,
+    UploadsModule,
   ],
   controllers: [],
   providers: [],

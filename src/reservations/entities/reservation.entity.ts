@@ -4,24 +4,27 @@ import { Schedule } from '../../schedules/entities/schedule.entity';
 @Entity('reservations')
 export class Reservation {
   @PrimaryGeneratedColumn('uuid')
-  reservationId: string;
+  reservationId!: string;
 
   @Column()
-  scheduleId: string;
+  scheduleId!: string;
 
   @ManyToOne(() => Schedule, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'scheduleId' })
-  schedule: Schedule;
+  schedule!: Schedule;
 
   @Column({ type: 'date' })
-  tripDate: string; // "YYYY-MM-DD"
+  tripDate!: string; // "YYYY-MM-DD"
 
   @Column({ type: 'int' })
-  seatNumber: number;
+  seatNumber!: number;
 
   @Column()
-  passengerName: string;
+  passengerName!  : string;
 
   @Column({ default: 'booked' })
-  status: string; // 'booked', 'cancelled'
+  status!: string; // 'locked', 'booked', 'cancelled'
+
+  @Column({ type: 'timestamp', nullable: true })
+  expiresAt!  : Date | null;
 }
