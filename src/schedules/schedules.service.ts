@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Schedule } from './entities/schedule.entity';
@@ -12,8 +12,27 @@ export class SchedulesService {
     private scheduleRepository: Repository<Schedule>,
   ) {}
 
-  create(dto: CreateScheduleDto) {
-    const schedule = this.scheduleRepository.create(dto);
+  async create(dto: CreateScheduleDto) {
+    if (dto.daysOfWeek && dto.daysOfWeek.length > 0) {
+      const createdSchedules: Schedule[] = [];
+      const { daysOfWeek, ...rest } = dto;
+      for (const day of dto.daysOfWeek) {
+        const schedule = this.scheduleRepository.create({
+          ...rest,
+          dayOfWeek: day,
+        });
+        const saved = await this.scheduleRepository.save(schedule);
+        createdSchedules.push(saved);
+      }
+      return createdSchedules;
+    }
+
+    if (dto.dayOfWeek === undefined) {
+      throw new BadRequestException('Debe proporcionar dayOfWeek o daysOfWeek.');
+    }
+
+    const { daysOfWeek, ...rest } = dto;
+    const schedule = this.scheduleRepository.create(rest as any);
     return this.scheduleRepository.save(schedule);
   }
 

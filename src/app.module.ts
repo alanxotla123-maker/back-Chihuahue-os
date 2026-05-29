@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { EmployeesModule } from './employees/employees.module';
 import { LocationsModule } from './locations/locations.module';
 import { SchedulesModule } from './schedules/schedules.module';
 import { TrucksModule } from './trucks/trucks.module';
@@ -23,7 +22,6 @@ import { UploadsModule } from './uploads/uploads.module';
       synchronize: true, // Esto crea las tablas automáticamente (solo para desarrollo)
     }),
     AuthModule,
-    EmployeesModule,
     LocationsModule,
     SchedulesModule,
     TrucksModule,

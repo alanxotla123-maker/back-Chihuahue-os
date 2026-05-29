@@ -11,8 +11,21 @@ export class ReservationsService {
     private readonly reservationRepo: Repository<Reservation>,
   ) {}
 
+  private getTodayString(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   // Purchase/Book a seat (transforms a locked seat to booked, or books directly)
   async create(dto: CreateReservationDto) {
+    const today = this.getTodayString();
+    if (dto.tripDate < today) {
+      throw new BadRequestException('No se pueden realizar reservaciones para fechas pasadas.');
+    }
+
     // Check if the seat is already booked, or locked by someone ELSE
     const existing = await this.reservationRepo.findOne({
       where: [
@@ -37,6 +50,11 @@ export class ReservationsService {
 
   // Lock a seat for 5 minutes
   async lockSeat(dto: CreateReservationDto) {
+    const today = this.getTodayString();
+    if (dto.tripDate < today) {
+      throw new BadRequestException('No se pueden realizar reservaciones para fechas pasadas.');
+    }
+
     // Delete any expired locks globally (cleanup) to avoid clutter
     await this.reservationRepo.delete({ status: 'locked', expiresAt: LessThanOrEqual(new Date()) });
 

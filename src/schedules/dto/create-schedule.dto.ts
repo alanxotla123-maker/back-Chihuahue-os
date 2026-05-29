@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsString, IsNumber, IsOptional, Min, IsArray } from 'class-validator';
 
 export class CreateScheduleDto {
   @IsString()
@@ -10,7 +10,13 @@ export class CreateScheduleDto {
 
   @IsNumber()
   @Min(0)
-  dayOfWeek: number; // 0-6
+  @IsOptional()
+  dayOfWeek?: number; // 0-6
+
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @IsOptional()
+  daysOfWeek?: number[];
 
   @IsString()
   departureTime: string; // "08:00"
