@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +11,12 @@ export class AuthService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  create(createAuthDto: CreateAuthDto) {
+  async create(createAuthDto: CreateAuthDto) {
+    const { email } = createAuthDto;
+    const existingUser = await this.userRepository.findOne({ where: { email } });
+    if (existingUser) {
+      throw new ConflictException('El correo electrónico ya está registrado');
+    }
     const user = this.userRepository.create(createAuthDto);
     return this.userRepository.save(user);
   }

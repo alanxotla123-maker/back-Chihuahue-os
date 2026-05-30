@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateReservationDto {
   @IsString()
@@ -16,4 +16,8 @@ export class CreateReservationDto {
   @IsString()
   @IsNotEmpty()
   passengerName!: string;
+
+  @IsString()
+  @IsOptional()
+  lockedByName?: string;
 }

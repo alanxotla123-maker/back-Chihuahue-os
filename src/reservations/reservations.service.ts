@@ -34,9 +34,12 @@ export class ReservationsService {
       ]
     });
 
-    if (existing && existing.status === 'locked' && existing.passengerName === dto.passengerName) {
-      // It's locked by THIS user. Upgrade to booked.
+    const lockOwner = dto.lockedByName || dto.passengerName;
+
+    if (existing && existing.status === 'locked' && existing.passengerName === lockOwner) {
+      // It's locked by THIS user. Upgrade to booked and update name if needed.
       existing.status = 'booked';
+      existing.passengerName = dto.passengerName;
       existing.expiresAt = null;
       return this.reservationRepo.save(existing);
     } else if (existing) {
@@ -119,7 +122,7 @@ export class ReservationsService {
   async findByUser(passengerName: string) {
     return this.reservationRepo.find({
       where: { passengerName, status: 'booked' },
-      relations: ['schedule', 'schedule.location'],
+      relations: ['schedule', 'schedule.location', 'schedule.truck'],
       order: { tripDate: 'DESC' }
     });
   }
